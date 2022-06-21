@@ -1,0 +1,27 @@
+name: sirius
+prefix: ""
+
+topology:
+  nodes:
+    sirius1:
+      kind: linux
+      image: chrissommers/dash-bmv2:latest
+      binds:
+        - ./bmv2:/bmv2
+        - ./SAI:/SAI
+        - ./tests:/tests
+        - ./bmv2/sirius_pipeline.bmv2/sirius_pipeline.json:/etc/dash/sirius_pipeline.json
+        - ./bmv2/sirius_pipeline.bmv2/sirius_pipeline_p4rt.txt:/etc/dash/sirius_pipeline_p4rt.txt
+      cmd: sh -c "sudo env LD_LIBRARY_PATH=/usr/local/lib simple_switch_grpc --interface 0@eth1 --interface 1@eth2 --log-console --no-p4"
+    otg:
+      kind: keysight_ixia-c-one
+      image: ghcr.io/open-traffic-generator/ixia-c-one:0.0.1-2934
+    test-client:
+      kind: linux
+      image: test-client:local
+      binds:
+        - ../test/test-cases/bmv2_model/otg:/otg
+
+  links:
+    - endpoints: ["otg:eth1","sirius1:eth1"]
+    - endpoints: ["otg:eth2","sirius1:eth2"]

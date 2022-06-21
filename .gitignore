@@ -1,5 +1,8 @@
+.DS_Store
 *.bkp
 *.log
 __pycache__/
 sirius-pipeline/bmv2/sirius_pipeline.bmv2/
 sirius-pipeline/SAI/lib/
+sirius-pipeline/.topo.yml
+sirius-pipeline/clab-*
